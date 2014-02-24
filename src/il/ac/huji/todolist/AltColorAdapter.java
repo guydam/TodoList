@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +29,10 @@ public class AltColorAdapter extends ArrayAdapter<String> {
 		
 		TextView todoItemTv = (TextView) convertView.findViewById(R.id.todoItemTextView);
 		
-		Log.d("TAG", "pos is "+pos);
-
 		if (pos %2 == 0) {
 			todoItemTv.setTextColor(Color.RED);	
 		} else {
-			todoItemTv.setTextColor(Color.BLACK);
+			todoItemTv.setTextColor(Color.BLUE);
 		}
 		todoItemTv.setText(itemStr);
 				

@@ -10,33 +10,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TodoListManagerActivity" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <EditText
-            android:id="@+id/edtNewItem"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:ems="10"
-            android:hint="@string/enter_new_item_hint" />
-
-        <ImageButton
-            android:id="@+id/addItemImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_new" 
-            android:contentDescription="@string/add_new_item"/>
-    </LinearLayout>
+    <EditText
+        android:id="@+id/edtNewItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_new_item_hint" />
 
     <ListView
         android:id="@+id/lstTodoItems"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
     </ListView>
-
-
 
 </LinearLayout>
