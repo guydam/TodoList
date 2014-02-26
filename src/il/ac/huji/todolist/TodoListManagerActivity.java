@@ -3,13 +3,18 @@ package il.ac.huji.todolist;
 import java.util.ArrayList;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
@@ -34,9 +39,8 @@ public class TodoListManagerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_todo_list_manager);
 
-		// Define the todo list array and get local data if any
+		// Define the todo list array
 		todoList = new ArrayList<String>();
-		getListFromSharedPreferences();
 
 		// Get references to views
 		todoListView = (ListView) findViewById(R.id.lstTodoItems);
@@ -46,10 +50,12 @@ public class TodoListManagerActivity extends Activity {
 		registerForContextMenu(todoListView);
 
 		// Create the list adapter and set it with the list view
-		todoListAdapter = new AltColorAdapter(this,
-				android.R.layout.simple_list_item_1, todoList);
+		todoListAdapter = new AltColorAdapter(getApplicationContext(),
+				R.layout.todo_list_row, todoList);
 		todoListView.setAdapter(todoListAdapter);
+		getListFromSharedPreferences();
 		todoListAdapter.notifyDataSetChanged();
+		
 	}
 
 	@Override
@@ -101,15 +107,35 @@ public class TodoListManagerActivity extends Activity {
 	 * Called when a context menu item is selected
 	 */
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
 		switch (item.getItemId()) {
 		case R.id.menuItemDelete:
-			removeItem((int) info.position);
+			// Get the view item and set its animation
+			View curView = info.targetView;
+			Animation anim = AnimationUtils.loadAnimation(this, R.animator.slide_out);
+			
+			anim.setAnimationListener(new AnimationListener() {
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					//curView.setVisibility(View.GONE);
+					removeItem((int) info.position);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {					
+				}
+
+				@Override
+				public void onAnimationStart(Animation animation) {					
+				}
+			});
+			
+			curView.startAnimation(anim);			
 			return true;
 		}
-		;
+		
 
 		return super.onContextItemSelected(item);
 	};
@@ -199,5 +225,19 @@ public class TodoListManagerActivity extends Activity {
 
 		// Commit the edits!
 		editor.commit();
+	}
+	
+	@Override
+	public void onBackPressed() {
+	    new AlertDialog.Builder(this)
+	           .setMessage(getString(R.string.exit_confirmation_msg))
+	           .setCancelable(false)
+	           .setPositiveButton(getString(R.string.exit_confirmation_yes), new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialog, int id) {
+	            	   TodoListManagerActivity.this.finish();
+	               }
+	           })
+	           .setNegativeButton(getString(R.string.exit_confirmation_no), null)
+	           .show();
 	}
 }

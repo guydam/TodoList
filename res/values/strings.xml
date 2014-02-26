@@ -12,4 +12,9 @@
     <string name="toast_no_item">No Item Inserted</string>
     <string name="toast_item_added">Item Added To List</string>
     
+    <string name="exit_confirmation_msg">Really Quit?</string>
+    <string name="exit_confirmation_yes">Yes</string>
+    <string name="exit_confirmation_no">No</string>
+    
+    
 </resources>

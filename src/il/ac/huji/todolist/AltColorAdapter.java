@@ -12,10 +12,13 @@ import android.widget.TextView;
 
 public class AltColorAdapter extends ArrayAdapter<String> {
 
+	Context mContext;
+	
 	public AltColorAdapter(Context context, int resource, List<String> objects) {
 		super(context, resource, objects);
+		mContext = context;
 	}
-
+	
 	@Override
 	public View getView(int pos, View convertView, ViewGroup parent) {
 		
@@ -29,13 +32,13 @@ public class AltColorAdapter extends ArrayAdapter<String> {
 		
 		TextView todoItemTv = (TextView) convertView.findViewById(R.id.todoItemTextView);
 		
-		if (pos %2 == 0) {
+		if (pos%2 == 0) {
 			todoItemTv.setTextColor(Color.RED);	
 		} else {
 			todoItemTv.setTextColor(Color.BLUE);
 		}
 		todoItemTv.setText(itemStr);
-				
+		
 		return convertView;
 
 	}
