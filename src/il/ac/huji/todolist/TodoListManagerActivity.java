@@ -70,25 +70,24 @@ public class TodoListManagerActivity extends Activity {
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case (R.id.menuItemAdd):
-			String newItemStr = newItemEditText.getText().toString();
-			if (newItemStr.length() != 0) {
-				addNewItem(newItemStr);
-				newItemEditText.setText("");
-				((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-						.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,
-								0);
-				showToast(getString(R.string.toast_item_added));
-			} else {
-				showToast(getString(R.string.toast_no_item));
-				return false;
-			}
-			return true;
+			case (R.id.menuItemAdd):
+				String newItemStr = newItemEditText.getText().toString();
+				if (newItemStr.length() != 0) {
+					addNewItem(newItemStr);
+					newItemEditText.setText("");
+					((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+							.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,
+									0);
+					showToast(getString(R.string.toast_item_added));
+				} else {
+					showToast(getString(R.string.toast_no_item));
+					return false;
+				}
+				return true;
 		}
-		;
 
 		return super.onOptionsItemSelected(item);
-	};
+	}
 
 	/**
 	 * Called when the context menu is created (long pressing the list view)
