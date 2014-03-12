@@ -4,4 +4,10 @@
         android:id="@+id/menuItemDelete"
         android:title="@string/context_menu_delete"/>
     
+    <item
+        android:id="@+id/menuItemCall"
+        android:visible="false"
+        android:title="@string/context_menu_call" 
+        />
+    
 </menu>

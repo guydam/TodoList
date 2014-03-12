@@ -6,4 +6,10 @@
     
     <dimen name="todo_item_font_size">15sp</dimen>
 
+    <dimen name="spinner_item_height">50dip</dimen>
+    <dimen name="spinner_item_font_size">25sp</dimen>
+    
+    <dimen name="dialog_button_font_size">20sp</dimen>
+    <dimen name="dialog_margin">15dip</dimen>
+    
 </resources>

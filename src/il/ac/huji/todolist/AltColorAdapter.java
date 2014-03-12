@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class AltColorAdapter extends ArrayAdapter<String> {
+public class AltColorAdapter extends ArrayAdapter<TodoItem> {
 
 	Context mContext;
 	
-	public AltColorAdapter(Context context, int resource, List<String> objects) {
+	public AltColorAdapter(Context context, int resource, List<TodoItem> objects) {
 		super(context, resource, objects);
 		mContext = context;
 	}
@@ -22,7 +22,7 @@ public class AltColorAdapter extends ArrayAdapter<String> {
 	@Override
 	public View getView(int pos, View convertView, ViewGroup parent) {
 		
-		String itemStr = getItem(pos);
+		TodoItem item = getItem(pos);
 		
 		
 		if (convertView == null) {
@@ -30,14 +30,19 @@ public class AltColorAdapter extends ArrayAdapter<String> {
 					R.layout.todo_list_row, null);
 		}
 		
-		TextView todoItemTv = (TextView) convertView.findViewById(R.id.todoItemTextView);
+		TextView todoItemTv = (TextView) convertView.findViewById(R.id.txtTodoTitle);
+		TextView dueDateTv = (TextView) convertView.findViewById(R.id.txtTodoDueDate);
 		
-		if (pos%2 == 0) {
-			todoItemTv.setTextColor(Color.RED);	
+		if (item.isPassedDueDate()) {
+			todoItemTv.setTextColor(Color.RED);
+			dueDateTv.setTextColor(Color.RED);
 		} else {
-			todoItemTv.setTextColor(Color.BLUE);
+			todoItemTv.setTextColor(Color.BLACK);
+			dueDateTv.setTextColor(Color.BLACK);	
 		}
-		todoItemTv.setText(itemStr);
+		
+		todoItemTv.setText(item.getItemStr());
+		dueDateTv.setText(item.getDueDate());
 		
 		return convertView;
 
