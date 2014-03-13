@@ -1,49 +1,30 @@
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/dialog_margin"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:layout_margin="@dimen/dialog_margin"
-    android:orientation="vertical" >
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
     <EditText
         android:id="@+id/edtNewItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/add_new_item"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="@string/add_new_item" >
 
         <requestFocus />
     </EditText>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin" >
-
-        <Spinner
-            android:id="@+id/dateMonthSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/dateDaySpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"   
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/dateYearSpinner"
-            android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-    </LinearLayout>
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,25 +32,24 @@
         android:paddingTop="@dimen/activity_vertical_margin" >
 
         <Button
-            android:id="@+id/dialogOkButton"
+            android:id="@+id/btnOK"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/dialog_ok"
             android:textSize="@dimen/dialog_button_font_size"
-            android:textStyle="bold"
-            android:text="@string/dialog_ok" />
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/dialogCancelButton"
+            android:id="@+id/btnCancel"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dialog_button_font_size"
-            android:textStyle="bold"
             android:layout_weight="1"
-            android:text="@string/dialog_cancel" />
-
+            android:text="@string/dialog_cancel"
+            android:textSize="@dimen/dialog_button_font_size"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
