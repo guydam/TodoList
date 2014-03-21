@@ -9,6 +9,8 @@ import android.util.Log;
 public class TodoItem {
 	private String itemStr;
 	private Date dueDate;
+	private String objectId;
+	
 	public final static String DUE_DATE_FORMAT = "dd/MM/yyyy";
 	public final static String NO_DUE_DATE = "No Due Date";
 
@@ -23,16 +25,22 @@ public class TodoItem {
 	}
 
 	/**
-	 * @return the dueDate
+	 * @return the due Date as a String
 	 */
-	public String getDueDate() {
+	public String getDueDateStr() {
 		SimpleDateFormat ft = new SimpleDateFormat (DUE_DATE_FORMAT,Locale.US);
 		if (dueDate!=null) {
 			return ft.format(dueDate);
 		}
 		return NO_DUE_DATE;
 	}
-
+	/**
+	 * @return the due Date
+	 */
+	public Date getDueDate () {
+		return dueDate;
+	}
+	
 	/**
 	 * @param dueDate the dueDate to set
 	 */
@@ -87,4 +95,13 @@ public class TodoItem {
 		Log.d("TAG","phone number "+numStr);
 		return numStr;
 	}
+	
+	public void setObjectId (String objectId) {
+		this.objectId = objectId;
+	}
+	
+	public String getObjectId () {
+		return this.objectId;
+	}
+	
 }

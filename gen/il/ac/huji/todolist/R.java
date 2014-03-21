@@ -37,18 +37,19 @@ public final class R {
         public static final int todo_icon=0x7f020002;
     }
     public static final class id {
-        public static final int LinearLayout=0x7f0a0006;
+        public static final int LinearLayout=0x7f0a0007;
         public static final int LinearLayout1=0x7f0a0000;
-        public static final int btnCancel=0x7f0a0005;
-        public static final int btnOK=0x7f0a0004;
-        public static final int datePicker=0x7f0a0003;
-        public static final int edtNewItem=0x7f0a0002;
-        public static final int lstTodoItems=0x7f0a0001;
-        public static final int menuItemAdd=0x7f0a000b;
-        public static final int menuItemCall=0x7f0a000a;
-        public static final int menuItemDelete=0x7f0a0009;
-        public static final int txtTodoDueDate=0x7f0a0008;
-        public static final int txtTodoTitle=0x7f0a0007;
+        public static final int btnCancel=0x7f0a0006;
+        public static final int btnOK=0x7f0a0005;
+        public static final int datePicker=0x7f0a0004;
+        public static final int edtNewItem=0x7f0a0003;
+        public static final int listProgressBar=0x7f0a0001;
+        public static final int lstTodoItems=0x7f0a0002;
+        public static final int menuItemAdd=0x7f0a000c;
+        public static final int menuItemCall=0x7f0a000b;
+        public static final int menuItemDelete=0x7f0a000a;
+        public static final int txtTodoDueDate=0x7f0a0009;
+        public static final int txtTodoTitle=0x7f0a0008;
     }
     public static final class layout {
         public static final int activity_todo_list_manager=0x7f030000;
@@ -74,6 +75,8 @@ public final class R {
         public static final int exit_confirmation_msg=0x7f06000a;
         public static final int exit_confirmation_no=0x7f06000c;
         public static final int exit_confirmation_yes=0x7f06000b;
+        public static final int login_bad=0x7f060011;
+        public static final int login_ok=0x7f060010;
         public static final int toast_item_added=0x7f060009;
         public static final int toast_no_item=0x7f060008;
         public static final int todo_call_tag=0x7f06000f;

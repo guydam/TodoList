@@ -42,7 +42,7 @@ public class AltColorAdapter extends ArrayAdapter<TodoItem> {
 		}
 		
 		todoItemTv.setText(item.getItemStr());
-		dueDateTv.setText(item.getDueDate());
+		dueDateTv.setText(item.getDueDateStr());
 		
 		return convertView;
 

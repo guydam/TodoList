@@ -23,6 +23,8 @@
     
     <string name="todo_call_tag">Call</string> 
     
+    <string name="login_ok">Login Successfuly</string>
+    <string name="login_bad">Can\'t Login To Server</string>
     
     <string-array name="due_date_months">
         <item> January </item>

@@ -8,6 +8,9 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/todo_icon"
@@ -22,11 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity 
-            android:name="AddNewTodoItemActivity" 
-            android:theme="@android:style/Theme.Dialog"
-        />
+        <activity
+            android:name="AddNewTodoItemActivity"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
