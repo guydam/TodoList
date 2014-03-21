@@ -230,6 +230,7 @@ public class TodoListManagerActivity extends Activity {
 			todoList.remove(position);
 			todoListAdapter.notifyDataSetChanged();
 			removeItemFromCloud(objectId);
+			saveListOnSharedPrefereces();
 			return true;
 		}
 		return false;
@@ -245,6 +246,7 @@ public class TodoListManagerActivity extends Activity {
 		todoList.add(newItem);
 		todoListAdapter.notifyDataSetChanged();
 		addItemToCloud(newItem);
+		saveListOnSharedPrefereces();
 	}
 
 	/**
@@ -347,6 +349,7 @@ public class TodoListManagerActivity extends Activity {
 					}
 					progressBar.setVisibility(View.GONE);
 					todoListAdapter.notifyDataSetChanged();
+					saveListOnSharedPrefereces();
 
 					// Else, take the list from the saved shared
 					// preferences
