@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseAnonymousUtils;
@@ -286,13 +287,18 @@ public class TodoListManagerActivity extends Activity {
 	private void removeItemFromCloud(String objectId) {
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TODO_ITEM_CLASS_NAME);
 
-		try {
-			ParseObject object = query.get(objectId);
-			object.deleteInBackground();
-		} catch (com.parse.ParseException e) {
-			e.printStackTrace();
-		}
-
+		query.getInBackground(objectId, new GetCallback<ParseObject>() {
+			
+			@Override
+			public void done(ParseObject object, com.parse.ParseException e) {
+				if (e == null) {
+					object.deleteInBackground();
+				} else {
+					e.printStackTrace();
+				}
+				
+			}
+		});
 	}
 
 	/**
