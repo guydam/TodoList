@@ -1,5 +1,6 @@
 package il.ac.huji.todolist;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -9,7 +10,7 @@ import android.util.Log;
 public class TodoItem {
 	private String itemStr;
 	private Date dueDate;
-	private String objectId;
+	private long objectId;
 	
 	public final static String DUE_DATE_FORMAT = "dd/MM/yyyy";
 	public final static String NO_DUE_DATE = "No Due Date";
@@ -17,6 +18,16 @@ public class TodoItem {
 	public TodoItem (String item, Date dueDate) {
 		this.setItemStr(item);
 		this.setDueDate(dueDate);
+	}
+	
+	public TodoItem (String item, String dueDate) {
+		SimpleDateFormat ft = new SimpleDateFormat(DUE_DATE_FORMAT, Locale.US);
+		try {	
+			this.setItemStr(item);
+			this.setDueDate(ft.parse(dueDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public TodoItem (String item) {
@@ -96,11 +107,11 @@ public class TodoItem {
 		return numStr;
 	}
 	
-	public void setObjectId (String objectId) {
+	public void setObjectId (long objectId) {
 		this.objectId = objectId;
 	}
 	
-	public String getObjectId () {
+	public long getObjectId () {
 		return this.objectId;
 	}
 	

@@ -23,8 +23,7 @@ public class AltColorAdapter extends ArrayAdapter<TodoItem> {
 	public View getView(int pos, View convertView, ViewGroup parent) {
 		
 		TodoItem item = getItem(pos);
-		
-		
+
 		if (convertView == null) {
 			convertView = LayoutInflater.from(getContext()).inflate(
 					R.layout.todo_list_row, null);

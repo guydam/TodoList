@@ -1,30 +1,16 @@
 package il.ac.huji.todolist;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.LogInCallback;
-import com.parse.Parse;
-import com.parse.ParseAnonymousUtils;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -40,20 +26,7 @@ import android.widget.Toast;
 
 public class TodoListManagerActivity extends Activity {
 
-	// Defines for Parse DB
-	public static final String TODO_ITEM_CLASS_NAME = "TodoItem";
-	public static final String TODO_ITEM_TEXT_KEY = "todoText";
-	public static final String TODO_ITEM_DUE_DATE_KEY = "dueDate";
-	public static final String TODO_ITEM_CREATED_AT_KEY = "createdAt";
-	public static final String TODO_ITEM_USER_KEY = "user";
-	public static final String TODO_ITEM_OBJECTID_KEY = "objectId";
-
-	// Name Definitions for the shared preferences mechanism
-	public static final String PREFS_NAME = "MyPrefsFile";
-	public static final String STRING_SET_NAME = "StringSetNum_";
-	public static final String DATE_SET_NAME = "DateSetNum_";
-	public static final String OBJECTID_SET_NAME = "ObjectIdNum_";
-	public static final String ITEMS_COUNT_NAME = "ItemsCount";
+	public static final String LOG_TAG = "TODO";
 
 	public static final int INTENT_REQUEST_CODE = 11;
 
@@ -63,14 +36,12 @@ public class TodoListManagerActivity extends Activity {
 	private ListView todoListView;
 	private ProgressBar progressBar;
 
-	private ParseUser curUser;
+	private TodoItemSQLiteHelper itemsDb;
+	private TodoListAsyncTask todoListTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Init the Parse DB
-		Parse.initialize(this, "RqbP6dRTutucJE7GW8Tib6B8VtzSXB5JbnsMJUCQ", "H68Sthcqwey6GSd0Cmnj6AH8ahccMlpdxOPOH0nj");
 
 		setContentView(R.layout.activity_todo_list_manager);
 
@@ -89,12 +60,12 @@ public class TodoListManagerActivity extends Activity {
 		todoListAdapter = new AltColorAdapter(getApplicationContext(), R.layout.todo_list_row, todoList);
 		todoListView.setAdapter(todoListAdapter);
 
-		curUser = ParseUser.getCurrentUser();
-		if (curUser == null) {
-			loginUser();
-		} else {
-			getListFromCloud();
-		}
+		// Create a new SQLite Helper
+		itemsDb = new TodoItemSQLiteHelper(getApplicationContext());
+
+		// Get the list from the DB (this will refresh the listView)
+		todoListTask = new TodoListAsyncTask();
+		todoListTask.execute();
 	}
 
 	@Override
@@ -226,11 +197,14 @@ public class TodoListManagerActivity extends Activity {
 	 */
 	private boolean removeItem(int position) {
 		if (position < todoList.size() && position >= 0) {
-			String objectId = todoList.get(position).getObjectId();
+
+			// Remove the item from the local DB
+			itemsDb.removeItem(todoList.get(position));
+
+			// Remove the item from the list and view
 			todoList.remove(position);
 			todoListAdapter.notifyDataSetChanged();
-			removeItemFromCloud(objectId);
-			saveListOnSharedPrefereces();
+
 			return true;
 		}
 		return false;
@@ -243,10 +217,16 @@ public class TodoListManagerActivity extends Activity {
 	 *            The item to add
 	 */
 	private void addNewItem(TodoItem newItem) {
-		todoList.add(newItem);
-		todoListAdapter.notifyDataSetChanged();
-		addItemToCloud(newItem);
-		saveListOnSharedPrefereces();
+		// Add the item to the DB (get its object id)
+		long id;
+		id = itemsDb.addItem(newItem);
+
+		if (id != -1) {
+			// Add the item to the list and view
+			newItem.setObjectId(id);
+			todoList.add(newItem);
+			todoListAdapter.notifyDataSetChanged();			
+		}
 	}
 
 	/**
@@ -263,158 +243,6 @@ public class TodoListManagerActivity extends Activity {
 		toast.show();
 	}
 
-	/**
-	 * Login to Parse as anonymous user
-	 */
-	private void loginUser() {
-		ParseAnonymousUtils.logIn(new LogInCallback() {
-
-			@Override
-			public void done(ParseUser user, com.parse.ParseException e) {
-				if (e == null) {
-					curUser = user;
-					showToast(getString(R.string.login_ok));
-					getListFromCloud();
-				} else {
-					showToast(getString(R.string.login_bad));
-				}
-			}
-		});
-	}
-
-	/**
-	 * Delete an item from the cloud 
-	 * @param objectId the given object id to delete
-	 */
-	private void removeItemFromCloud(String objectId) {
-		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TODO_ITEM_CLASS_NAME);
-
-		query.getInBackground(objectId, new GetCallback<ParseObject>() {
-			
-			@Override
-			public void done(ParseObject object, com.parse.ParseException e) {
-				if (e == null) {
-					object.deleteInBackground();
-				} else {
-					e.printStackTrace();
-				}
-				
-			}
-		});
-	}
-
-	/**
-	 * Add the given TodoItem to the cloud
-	 * @param item The given item to add
-	 */
-	private void addItemToCloud(TodoItem item) {
-		final int itemLocation = todoList.size() - 1;
-		final ParseObject pObject = new ParseObject(TODO_ITEM_CLASS_NAME);
-
-		pObject.put(TODO_ITEM_TEXT_KEY, item.getItemStr());
-		pObject.put(TODO_ITEM_DUE_DATE_KEY, item.getDueDate());
-		pObject.put(TODO_ITEM_USER_KEY, curUser);
-
-		item.setObjectId(pObject.getObjectId());
-		pObject.saveInBackground(new SaveCallback() {
-
-			@Override
-			public void done(com.parse.ParseException e) {
-				todoList.get(itemLocation).setObjectId(pObject.getObjectId());
-			}
-		});
-	}
-
-	/**
-	 * Retrieve the Todo list from the cloud
-	 */
-	private void getListFromCloud() {
-		todoList.clear();
-
-		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(TODO_ITEM_CLASS_NAME);
-		query.addAscendingOrder(TODO_ITEM_CREATED_AT_KEY);
-		query.whereEqualTo(TODO_ITEM_USER_KEY, curUser);
-
-		query.findInBackground(new FindCallback<ParseObject>() {
-
-			@Override
-			public void done(List<ParseObject> objects, com.parse.ParseException e) {
-
-				// If everything was ok update the list and notify data change
-				if (e == null) {
-					for (ParseObject object : objects) {
-						TodoItem item = new TodoItem(object.getString(TODO_ITEM_TEXT_KEY), object.getDate(TODO_ITEM_DUE_DATE_KEY));
-						item.setObjectId(object.getObjectId());
-						todoList.add(item);
-					}
-					progressBar.setVisibility(View.GONE);
-					todoListAdapter.notifyDataSetChanged();
-					saveListOnSharedPrefereces();
-
-					// Else, take the list from the saved shared
-					// preferences
-				} else {
-					e.printStackTrace();
-					getListFromSharedPreferences();
-					progressBar.setVisibility(View.GONE);
-					todoListAdapter.notifyDataSetChanged();
-				}
-
-			}
-		});
-	}
-
-	/**
-	 * Retrieve the todo items array from the local shared preferences
-	 */
-	private void getListFromSharedPreferences() {
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-		int listSize = settings.getInt(ITEMS_COUNT_NAME, 0);
-		SimpleDateFormat ft = new SimpleDateFormat(TodoItem.DUE_DATE_FORMAT, Locale.US);
-
-		for (int i = 0; i < listSize; i++) {
-			String curStr = settings.getString(STRING_SET_NAME + i, "");
-			String curDateStr = settings.getString(DATE_SET_NAME + i, "");
-			String objectId = settings.getString(OBJECTID_SET_NAME + i, "");
-			try {
-				TodoItem item = new TodoItem(curStr, ft.parse(curDateStr));
-				item.setObjectId(objectId);
-				todoList.add(item);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Save the list on shared preferences
-	 */
-	private void saveListOnSharedPrefereces() {
-		// Get the shared preferences editor
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-
-		// Put the items count into shared preferences
-		editor.putInt(ITEMS_COUNT_NAME, todoList.size());
-
-		// Put all the todo items into the shared preferences
-		for (int i = 0; i < todoList.size(); i++) {
-			editor.putString(STRING_SET_NAME + i, todoList.get(i).getItemStr());
-			editor.putString(DATE_SET_NAME + i, todoList.get(i).getDueDateStr());
-			editor.putString(OBJECTID_SET_NAME + i, todoList.get(i).getObjectId());
-
-		}
-		// Commit the edits!
-		editor.commit();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		saveListOnSharedPrefereces();
-	}
-
 	@Override
 	public void onBackPressed() {
 		new AlertDialog.Builder(this).setMessage(getString(R.string.exit_confirmation_msg)).setCancelable(false)
@@ -424,4 +252,37 @@ public class TodoListManagerActivity extends Activity {
 					}
 				}).setNegativeButton(getString(R.string.exit_confirmation_no), null).show();
 	}
+
+	private class TodoListAsyncTask extends AsyncTask<String, TodoItem, String> {
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			progressBar.setVisibility(View.VISIBLE);
+			todoList.clear();
+			ArrayList<TodoItem> list = itemsDb.getAllItems();
+			Log.d(LOG_TAG, "Got from DB total " + list.size());
+
+			for (TodoItem item : list) {
+				try {
+					Thread.sleep(1000);
+					publishProgress(item);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+
+		protected void onProgressUpdate(TodoItem... a) {
+			todoList.add(a[0]);
+			todoListAdapter.notifyDataSetChanged();
+		}
+		
+	    protected void onPostExecute(String result) {
+			Log.d(LOG_TAG, "Async Task Done");
+			progressBar.setVisibility(View.GONE);
+	    }
+
+	}
+
 }

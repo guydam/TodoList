@@ -43,8 +43,8 @@ public final class R {
         public static final int btnOK=0x7f0a0005;
         public static final int datePicker=0x7f0a0004;
         public static final int edtNewItem=0x7f0a0003;
-        public static final int listProgressBar=0x7f0a0001;
-        public static final int lstTodoItems=0x7f0a0002;
+        public static final int listProgressBar=0x7f0a0002;
+        public static final int lstTodoItems=0x7f0a0001;
         public static final int menuItemAdd=0x7f0a000c;
         public static final int menuItemCall=0x7f0a000b;
         public static final int menuItemDelete=0x7f0a000a;
