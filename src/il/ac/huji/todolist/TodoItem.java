@@ -15,11 +15,21 @@ public class TodoItem {
 	public final static String DUE_DATE_FORMAT = "dd/MM/yyyy";
 	public final static String NO_DUE_DATE = "No Due Date";
 
+	/**
+	 * Build a new Todo Item with Date Object 
+	 * @param item The new Item string
+	 * @param dueDate The new item due date as a Date Object
+	 */
 	public TodoItem (String item, Date dueDate) {
 		this.setItemStr(item);
 		this.setDueDate(dueDate);
 	}
 	
+	/**
+	 * Build a new Todo Item with Date as a String 
+	 * @param item The new Item string
+	 * @param dueDate The new item due date as a String Object
+	 */	
 	public TodoItem (String item, String dueDate) {
 		SimpleDateFormat ft = new SimpleDateFormat(DUE_DATE_FORMAT, Locale.US);
 		try {	
@@ -30,6 +40,10 @@ public class TodoItem {
 		}
 	}
 	
+	/**
+	 * Build a new Todo Item with the current date
+	 * @param item
+	 */
 	public TodoItem (String item) {
 		this.setDueDate(new Date());
 		this.setItemStr(item);

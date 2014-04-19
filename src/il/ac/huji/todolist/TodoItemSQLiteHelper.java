@@ -40,22 +40,29 @@ public class TodoItemSQLiteHelper extends SQLiteOpenHelper{
 		this.onCreate(db);
 	}
 	
+	/**
+	 * Add the given item to the SQL data base
+	 * @param item The given item to add
+	 * @return the added item object id
+	 */
 	public long addItem (TodoItem item) {
 		long id;
 		
-
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_TEXT_NAME, item.getItemStr());
 		values.put(COLUMN_DATE_NAME, item.getDueDateStr());
 		id = db.insert(TABLE_NAME, null, values);
 		db.close();
-		
 //		Log.d(TodoListManagerActivity.LOG_TAG, "Adding new Item "+item.getItemStr()+" Id = "+id);
 		
 		return id;
 	}
 	
+	/**
+	 * Return all the Todo Items from the SQL database
+	 * @return All the Todo Items as a List
+	 */
 	public ArrayList<TodoItem> getAllItems () {
 		Log.d(TodoListManagerActivity.LOG_TAG, "Getting all items ");
 
@@ -79,10 +86,13 @@ public class TodoItemSQLiteHelper extends SQLiteOpenHelper{
 		return items;
 	}
 	
+	/**
+	 * Remove the given item from the SQL database
+	 * @param item The given item to remove
+	 * @return true if an item has been removed
+	 */
 	public boolean removeItem (TodoItem item) {
 //		Log.d(TodoListManagerActivity.LOG_TAG, "remove item "+item.getItemStr()+ " id = "+item.getObjectId());
-
-		
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		return db.delete(TABLE_NAME,
@@ -90,6 +100,9 @@ public class TodoItemSQLiteHelper extends SQLiteOpenHelper{
 				null) > 0;
 	}
 	
+	/**
+	 * Clears the SQL database
+	 */
 	public void clearTable () {
 		SQLiteDatabase db = this.getWritableDatabase();
 

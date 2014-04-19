@@ -225,7 +225,7 @@ public class TodoListManagerActivity extends Activity {
 			// Add the item to the list and view
 			newItem.setObjectId(id);
 			todoList.add(newItem);
-			todoListAdapter.notifyDataSetChanged();			
+			todoListAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -253,6 +253,12 @@ public class TodoListManagerActivity extends Activity {
 				}).setNegativeButton(getString(R.string.exit_confirmation_no), null).show();
 	}
 
+	/**
+	 * AsyncTask Class which loads the Todo Items from SQL database
+	 * 
+	 * @author gdamary
+	 * 
+	 */
 	private class TodoListAsyncTask extends AsyncTask<String, TodoItem, String> {
 
 		@Override
@@ -277,12 +283,10 @@ public class TodoListManagerActivity extends Activity {
 			todoList.add(a[0]);
 			todoListAdapter.notifyDataSetChanged();
 		}
-		
-	    protected void onPostExecute(String result) {
+
+		protected void onPostExecute(String result) {
 			Log.d(LOG_TAG, "Async Task Done");
 			progressBar.setVisibility(View.GONE);
-	    }
-
+		}
 	}
-
 }

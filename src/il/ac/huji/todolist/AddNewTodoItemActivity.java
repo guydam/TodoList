@@ -41,9 +41,10 @@ public class AddNewTodoItemActivity extends Activity {
 		setButtonsListeners();
 	}
 	
+	/**
+	 * Setup the add dialog with text and date picker
+	 */
 	private void setUpDialog () {
-
-		
 		datePicekr = (DatePicker) findViewById(R.id.datePicker);
 		final Calendar c = Calendar.getInstance();
 		year = c.get(Calendar.YEAR);
@@ -59,7 +60,11 @@ public class AddNewTodoItemActivity extends Activity {
 		dialogOkButton = (Button) findViewById(R.id.btnOK);
 	}
 	
+	/**
+	 * Set the correct Button Listeners
+	 */
 	private void setButtonsListeners () {
+		
 		dialogCancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -72,10 +77,10 @@ public class AddNewTodoItemActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				
 				Date itemDueDate = getNewItemDate();
 				String itemStr = newItemEditText.getText().toString();
 				
+				// Make sure the item text has some content
 				if (itemStr.length() != 0) {
 					Intent intent =  getIntent();
 					intent.putExtra(EXTRA_KEY_TITLE, itemStr);
@@ -92,6 +97,10 @@ public class AddNewTodoItemActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * Return the new item Date from the date picker
+	 * @return The new item Date as it set in the date picker
+	 */
 	private Date getNewItemDate () {
 		int day = datePicekr.getDayOfMonth();
 		int year = datePicekr.getYear();
